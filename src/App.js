@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
-import ArtFactoryBuilder from "./contracts/ArtFactoryBuilder.json";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import Layout from './components/Layout';
 import LandingPage from './components/landing/Index';
 
-import getWeb3 from "./utils/getWeb3";
-import truffleContract from "truffle-contract";
-
-import { Dimmer, Loader, Segment } from 'semantic-ui-react'
-
+import { Dimmer, Loader } from 'semantic-ui-react'
 
 class App extends Component {
   state = {
@@ -39,17 +34,6 @@ class App extends Component {
     });
   }
 
-  // TODO: Move to pure component
-  renderDimmer = (loading) => {
-    if(loading){
-      return(
-        <Dimmer active inverted>
-          <Loader inverted>Loading Web3, accounts, and contracts...</Loader>
-        </Dimmer>
-      )
-    }
-  }
-
   render() {
     const { loading, account } = this.state
 
@@ -59,9 +43,7 @@ class App extends Component {
     return (
       <Router>
         <Layout account={account} drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} >
-          {this.renderDimmer(loading)}
-
-          <Route exact path="/" render={ (props) => <LandingPage drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />} />
+          <Route exact path="/" render={ () => <LandingPage drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />} />
         </Layout>
       </Router>
     );
