@@ -13,8 +13,19 @@ class SignupModal extends Component {
   handleClose = () => this.setState({ modalOpen: false })
 
   handleSignup = async () => {
-    const { builderContract, accounts } = this.props
+
+    const { drizzle, drizzleState } = this.props;
     const { nickname, email } = this.state
+    console.log("handleSignup")
+    console.log(drizzle);
+    const contract = drizzle.contracts.ArtFactoryBuilder;
+
+
+
+    const stackId = contract.methods["createArtist"]
+                            .cacheSend(nickname, email, { from: drizzleState.accounts[0]});
+
+    this.setState({ stackId: stackId });
 
     // await builderContract.newArtist(nickname, email).call({from: accounts[0], gas: '1000000'});
   }

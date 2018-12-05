@@ -44,9 +44,9 @@ class Header extends Component {
         </Menu>
       </MenuWrapper>
       <SignupModal
-        accounts={this.props.accounts}
-        builderContract={this.props.builderContract}
         ref={ instance => { this.signupModal = instance } }
+        drizzle={ this.props.drizzle }
+        drizzleState={ this.props.drizzleState }
       />
       </div>
     )

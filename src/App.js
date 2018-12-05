@@ -15,36 +15,33 @@ import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 class App extends Component {
   state = {
     loading: true,
+    drizzleState: null,
     account: null,
-    builderContract: null
   }
 
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+  componentWillMount() {
+    const { drizzle } = this.props;
 
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+    // subscribe to changes in the store
+    this.unsubscribe = drizzle.store.subscribe(() => {
 
-      // Get the contract instance.
-      const artFactoryBuilderContract = truffleContract(ArtFactoryBuilder);
-      artFactoryBuilderContract.setProvider(web3.currentProvider);
-      const builderContract = await artFactoryBuilderContract.deployed();
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, builderContract });
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      //alert('Failed to load web3, accounts, or contract. Check console for details.');
-      console.log(error);
-    }
-  };
+      // every time the store updates, grab the state from drizzle
+      const drizzleState = drizzle.store.getState();
 
-  renderDimmer = () => {
-    const { web3, accounts, builderContract } = this.state
+      // check to see if it's ready, if so, update local component state
+      if (drizzleState.drizzleStatus.initialized) {
+        this.setState({
+          loading: false,
+          account: drizzleState.accounts[0],
+          drizzleState
+        });
+      }
+    });
+  }
 
-    if(!web3 || accounts.length === 0 || !builderContract){
+  // TODO: Move to pure component
+  renderDimmer = (loading) => {
+    if(loading){
       return(
         <Dimmer active inverted>
           <Loader inverted>Loading Web3, accounts, and contracts...</Loader>
@@ -54,17 +51,17 @@ class App extends Component {
   }
 
   render() {
-    const { web3, accounts, builderContract } = this.state
+    const { loading, account } = this.state
 
-    if(!web3)
-      return null;
+    if(loading)
+      return "Loading Web3, accounts, and contracts...";
 
     return (
       <Router>
-        <Layout accounts={accounts} builderContract={builderContract} >
-          {this.renderDimmer()}
+        <Layout account={account} drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} >
+          {this.renderDimmer(loading)}
 
-          <Route exact path="/" render={ (props) => <LandingPage />} />
+          <Route exact path="/" render={ (props) => <LandingPage drizzle={this.props.drizzle} drizzleState={this.state.drizzleState} />} />
         </Layout>
       </Router>
     );
