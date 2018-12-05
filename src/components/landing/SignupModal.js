@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Image, Modal, Icon, Form} from 'semantic-ui-react'
+import { Button, Modal, Icon, Form} from 'semantic-ui-react'
 
 class SignupModal extends Component {
   state = {
@@ -8,15 +8,12 @@ class SignupModal extends Component {
     nickname: null,
   }
 
-  constructor(props){
-    super(props)
-  }
 
   handleOpen  = () => this.setState({ modalOpen: true })
   handleClose = () => this.setState({ modalOpen: false })
 
   handleSignup = () => {
-
+    console.log("signup", this.state.email, this.state.nickname)
   }
 
 
