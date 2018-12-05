@@ -16,6 +16,7 @@ class App extends Component {
   state = {
     loading: true,
     account: null,
+    builderContract: null
   }
 
   componentDidMount = async () => {
@@ -29,11 +30,11 @@ class App extends Component {
       // Get the contract instance.
       const artFactoryBuilderContract = truffleContract(ArtFactoryBuilder);
       artFactoryBuilderContract.setProvider(web3.currentProvider);
-      const contract = await artFactoryBuilderContract.deployed();
+      const builderContract = await artFactoryBuilderContract.deployed();
 
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract });
+      this.setState({ web3, accounts, builderContract });
     } catch (error) {
       // Catch any errors for any of the above operations.
       //alert('Failed to load web3, accounts, or contract. Check console for details.');
@@ -42,9 +43,9 @@ class App extends Component {
   };
 
   renderDimmer = () => {
-    const { web3, accounts, contract } = this.state
+    const { web3, accounts, builderContract } = this.state
 
-    if(!web3 || accounts.length === 0 || !contract){
+    if(!web3 || accounts.length === 0 || !builderContract){
       return(
         <Dimmer active inverted>
           <Loader inverted>Loading Web3, accounts, and contracts...</Loader>
@@ -54,12 +55,14 @@ class App extends Component {
   }
 
   render() {
-    if(!this.state.web3)
+    const { web3, accounts, builderContract } = this.state
+
+    if(!web3)
       return null;
 
     return (
       <Router>
-        <Layout account={this.state.account} >
+        <Layout builderContract={builderContract} >
           {this.renderDimmer()}
 
           <Route exact path="/" render={ (props) => <LandingPage />} />

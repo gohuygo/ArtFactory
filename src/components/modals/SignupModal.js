@@ -14,6 +14,7 @@ class SignupModal extends Component {
 
   handleSignup = () => {
     console.log("signup", this.state.email, this.state.nickname)
+    console.log("contract", this.props.builderContract)
   }
 
 
@@ -33,10 +34,7 @@ class SignupModal extends Component {
                 <label>Email</label>
                 <input placeholder='Email' onChange={(e) => {this.setState({email: e.target.value})}} />
               </Form.Field>
-
             </Form>
-
-
           </Modal.Description>
         </Modal.Content>
 
