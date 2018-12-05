@@ -12,11 +12,12 @@ class SignupModal extends Component {
   handleOpen  = () => this.setState({ modalOpen: true })
   handleClose = () => this.setState({ modalOpen: false })
 
-  handleSignup = () => {
-    console.log("signup", this.state.email, this.state.nickname)
-    console.log("contract", this.props.builderContract)
-  }
+  handleSignup = async () => {
+    const { builderContract, accounts } = this.props
+    const { nickname, email } = this.state
 
+    // await builderContract.newArtist(nickname, email).call({from: accounts[0], gas: '1000000'});
+  }
 
   render() {
     return(

@@ -31,7 +31,6 @@ class App extends Component {
       const artFactoryBuilderContract = truffleContract(ArtFactoryBuilder);
       artFactoryBuilderContract.setProvider(web3.currentProvider);
       const builderContract = await artFactoryBuilderContract.deployed();
-
       // Set web3, accounts, and contract to the state, and then proceed with an
       // example of interacting with the contract's methods.
       this.setState({ web3, accounts, builderContract });
@@ -62,7 +61,7 @@ class App extends Component {
 
     return (
       <Router>
-        <Layout builderContract={builderContract} >
+        <Layout accounts={accounts} builderContract={builderContract} >
           {this.renderDimmer()}
 
           <Route exact path="/" render={ (props) => <LandingPage />} />

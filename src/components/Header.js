@@ -37,13 +37,14 @@ class Header extends Component {
             </a>
           </Menu.Item>
           <Menu.Menu position='right'>
-            <Menu.Item onClick={this.OnAccountNumberClick}>
-              <Button primary inverted>{this.displayAccountNumber()}</Button>
+            <Menu.Item >
+              <Button primary inverted onClick={this.OnAccountNumberClick}>{this.displayAccountNumber()}</Button>
             </Menu.Item>
           </Menu.Menu>
         </Menu>
       </MenuWrapper>
       <SignupModal
+        accounts={this.props.accounts}
         builderContract={this.props.builderContract}
         ref={ instance => { this.signupModal = instance } }
       />
