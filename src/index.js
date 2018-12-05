@@ -13,7 +13,7 @@ import ArtFactoryBuilder from './contracts/ArtFactoryBuilder.json'
 
 const options = {
   contracts: [
-    ArtFactoryBuilder
+    ArtFactoryBuilder,
   ]
 }
 

@@ -6,29 +6,33 @@ class SignupModal extends Component {
     modalOpen: false,
     email: null,
     nickname: null,
+    createArtistId: null,
   }
-
 
   handleOpen  = () => this.setState({ modalOpen: true })
   handleClose = () => this.setState({ modalOpen: false })
 
   handleSignup = async () => {
-
     const { drizzle, drizzleState } = this.props;
     const { nickname, email } = this.state
-    console.log("handleSignup")
-    console.log(drizzle);
+
     const contract = drizzle.contracts.ArtFactoryBuilder;
 
+    const createArtistId = contract.methods["createArtist"]
+                                   .cacheSend(nickname, email, { from: drizzleState.accounts[0]});
 
-
-    const stackId = contract.methods["createArtist"]
-                            .cacheSend(nickname, email, { from: drizzleState.accounts[0]});
-
-    this.setState({ stackId: stackId });
-
-    // await builderContract.newArtist(nickname, email).call({from: accounts[0], gas: '1000000'});
+    this.setState({ createArtistId });
   }
+
+  getTxStatus = () => {
+    const { transactions, transactionStack } = this.props.drizzleState;
+
+    const txHash = transactionStack[this.state.createArtistId];
+
+    if (!txHash) return null;
+
+    return transactions[txHash].status;
+  };
 
   render() {
     return(
@@ -48,6 +52,9 @@ class SignupModal extends Component {
               </Form.Field>
             </Form>
           </Modal.Description>
+
+          <h3>{!!this.getTxStatus() && `Transaction status: ${this.getTxStatus()}`}</h3>
+
         </Modal.Content>
 
         <Modal.Actions>

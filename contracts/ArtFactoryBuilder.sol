@@ -9,7 +9,7 @@ contract ArtFactoryBuilder {
     mapping(address => address) public artistContracts;
 
     modifier notSignedUp {
-        require(artistContracts[msg.sender] != 0);
+        require(artistContracts[msg.sender] == 0);
         _;
     }
 
