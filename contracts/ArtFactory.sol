@@ -2,7 +2,7 @@ pragma solidity ^0.4.15;
 
 // ArtFactory
 //
-// The core contract that the client interacts with to register new Artists.
+// The core contract that the client interacts with to manage artists and their uploaded content.
 contract ArtFactory {
 
     struct Content{
@@ -11,7 +11,6 @@ contract ArtFactory {
         string title;
         string description;
         uint128 price;
-        address artist;
         mapping(address => bool) viewingAllowed;
     }
 
@@ -19,6 +18,7 @@ contract ArtFactory {
         string nickname;
         string email;
         address artistAddress;
+        // Content[] contents;
     }
 
     address public owner;
@@ -37,13 +37,14 @@ contract ArtFactory {
         owner = msg.sender;
     }
 
-    // CreateArtist       Create a new Artist struct and update state variables
+    // createArtist       Create a new Artist contract and update state variables
     // @param _nickname   The nickname of the Artist
     // @param _email      The email of the artist
     //
-    // @return bool       Returns true if successful
+    // @return address    Returns the address of the new Artist contract
     function createArtist(string _nickname, string _email) public notSignedUp returns (bool){
-        Artist memory artist = Artist(_nickname, _email, msg.sender);
+        // Content[] memory emptyContents;
+        Artist memory artist = Artist(_nickname, _email, msg.sender);//, emptyContents);
         // Might be unnecessary to store an array of Artists unless we want to
         // list some of these artists on the client
         artists.push(msg.sender);
@@ -54,14 +55,14 @@ contract ArtFactory {
         return true;
     }
 
-    // CreateContent         Create a new Content struct and update state variables
+    // NewContent            Create a new Content contract and update state variables
     // @param _videoUrl      The IPFS url of the video
     // @param _thumbnailUrl  The IPFS url of the thumbnail
     // @param _title         The content title
     // @param _description   The content description
     // @param _price         The price that supporters will have to pay to access the content
     //
-    // @return bool          Returns true if successful
+    // @return address       Returns the address of the new Content contract
     function createContent(
         string _videoUrl,
         string _thumbnailUrl,
@@ -69,9 +70,13 @@ contract ArtFactory {
         string _description,
         uint128 _price)
         public returns (bool) {
-            Content memory content = Content(_videoUrl, _thumbnailUrl, _title, _description, _price, address(this));
+            Content memory content = Content(_videoUrl, _thumbnailUrl, _title, _description, _price);
+
             // Store the content in an array so we can access all of an artist's content
+
             artistContents[msg.sender].push(content);
+            // Artist storage artist = artistMapping[msg.sender];
+            // artist.contents.push(content);
 
             return true;
     }
@@ -79,6 +84,4 @@ contract ArtFactory {
     //function viewBalance()
     //function withdraw()
 }
-
-
 
